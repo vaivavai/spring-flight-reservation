@@ -1,8 +1,8 @@
 package com.example.FlightReservations.repositories;
 
+import com.example.FlightReservations.models.Airport;
 import com.example.FlightReservations.models.Flight;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -10,14 +10,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface FlightRepository extends JpaRepository <Flight, UUID>{
 
-  @Override
-  Optional<Flight> findById(UUID uuid);
+  List<Flight> findByOriginAirport(Airport originAirport);
 
-  Optional<Flight> findByOriginCity(String originCity);
+  List<Flight> findFlightsByOriginAirportAndDestinationAirport(Airport originAirport, Airport destinationAirport);
 
-  List<Flight> findFlightsByOriginCityAndDestinationCity(String originCity, String destinationCity);
+  List<Flight> findFlightsByDestinationAirport(Airport destinationAirport);
 
-  List<Flight> findFlightsByDestinationCity(String destinationCityName);
-
-  List<Flight> findFlightsByOriginCity(String originCityName);
 }

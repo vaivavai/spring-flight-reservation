@@ -6,6 +6,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
@@ -20,27 +22,35 @@ public class Flight {
   @GenericGenerator(name = "uuid", strategy = "uuid2")
   @Type(type = "pg-uuid")
   private UUID id;
-  private String originCity;
-  private String destinationCity;
+
+  @ManyToOne
+  @JoinColumn(name = "origin_airport")
+  private Airport originAirport;
+
+  @ManyToOne
+  @JoinColumn(name = "destination_airport")
+  private Airport destinationAirport;
+
   private LocalDateTime departureDate;
+
   private Double price;
 
   public Flight() {
   }
 
-  public Flight(String originCity, String destinationCity, LocalDateTime departureDate,
-      Double price) { // TODO Check if Double class is used consistently
-    this.originCity = originCity;
-    this.destinationCity = destinationCity;
+  public Flight(Airport originAirport, Airport destinationAirport,
+      LocalDateTime departureDate, Double price) {
+    this.originAirport = originAirport;
+    this.destinationAirport = destinationAirport;
     this.departureDate = departureDate;
     this.price = price;
   }
 
-  public Flight(UUID id, String originCity, String destinationCity, LocalDateTime departureDate,
-      Double price) {
+  public Flight(UUID id, Airport originAirport, Airport destinationAirport,
+      LocalDateTime departureDate, Double price) {
     this.id = id;
-    this.originCity = originCity;
-    this.destinationCity = destinationCity;
+    this.originAirport = originAirport;
+    this.destinationAirport = destinationAirport;
     this.departureDate = departureDate;
     this.price = price;
   }
@@ -53,20 +63,20 @@ public class Flight {
     this.id = id;
   }
 
-  public String getOriginCity() {
-    return originCity;
+  public Airport getOriginAirport() {
+    return originAirport;
   }
 
-  public void setOriginCity(String originCity) {
-    this.originCity = originCity;
+  public void setOriginAirport(Airport originAirport) {
+    this.originAirport = originAirport;
   }
 
-  public String getDestinationCity() {
-    return destinationCity;
+  public Airport getDestinationAirport() {
+    return destinationAirport;
   }
 
-  public void setDestinationCity(String destinationCity) {
-    this.destinationCity = destinationCity;
+  public void setDestinationAirport(Airport destinationAirport) {
+    this.destinationAirport = destinationAirport;
   }
 
   public LocalDateTime getDepartureDate() {
@@ -85,14 +95,4 @@ public class Flight {
     this.price = price;
   }
 
-  @Override
-  public String toString() {
-    return "Flight{" +
-        "id=" + id +
-        ", originCity=" + originCity +
-        ", destinationCity=" + destinationCity +
-        ", departureDate=" + departureDate +
-        ", price=" + price +
-        '}';
-  }
 }

@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.any;
 import com.example.FlightReservations.models.AppUser;
 import com.example.FlightReservations.utils.AppUserRole;
 import java.util.Optional;
+import java.util.UUID;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +23,10 @@ class AppUserRepositoryTest {
   }
 
   @Test
-  void should_Check_If_UserExists_By_Email() {
+  void should_Check_If_User_Exists_By_Email() {
     //given
     String email = "tom@gmail.com";
-    AppUser user1 = new AppUser("Tom", "tom123", email, AppUserRole.USER);
+    AppUser user1 = new AppUser( "Tom", "tom123", email, AppUserRole.USER);
     underTest.save(user1);
     //when
     AppUser expected = underTest.findAppUserByEmail(email).get();
@@ -35,10 +36,10 @@ class AppUserRepositoryTest {
   }
 
   @Test
-  void should_Check_If_UserDoesNotExists_ThrowException() {
+  void should_Return_Empty_If_User_DoesNot_Exists() {
 
     //given
-    AppUser user1 = new AppUser("Tom", "tom123", "tom@gmail.com", AppUserRole.USER);
+    AppUser user1 = new AppUser(UUID.randomUUID(), "Tom", "tom123", "tom@gmail.com", AppUserRole.USER);
     underTest.save(user1);
     //when
     Optional<AppUser> expected = underTest.findAppUserByEmail(any());

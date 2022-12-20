@@ -4,10 +4,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-public class AppUserAlreadyExistsException extends RuntimeException{
+public class AirportAlreadyExistsException extends RuntimeException{
 
-  public AppUserAlreadyExistsException() {
-    super("User with this email already exists");
+  public AirportAlreadyExistsException() {
+    super("Airport with this name already exists");
   }
 
 }

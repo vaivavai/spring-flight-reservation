@@ -34,28 +34,21 @@ public class ReservationService {
   public List<Reservation> getReservations() {
     List<Reservation> reservations = reservationRepository.findAll();
     return reservations;
-
   }
 
   public void addReservation(ReservationDTO reservationDTO) {
-    Optional<AppUser> optionalAppUser = Optional.ofNullable(
-        appUserRepository.findById(UUID.fromString(reservationDTO.getUserId())).orElseThrow(
-            AppUserNotFoundException::new));
 
-    Optional<Flight> optionalFlight = Optional.ofNullable(
-        flightRepository.findById(UUID.fromString(reservationDTO.getFlightId()))
-            .orElseThrow(
-                FlightNotFoundException::new)); // todo check if test works with this kind, if not change to be consistent with others. which means using standard if block and throw if not found
-
-    AppUser appUser = optionalAppUser.get();
-    Flight flight = optionalFlight.get();
+    AppUser appUser = getAppUser(reservationDTO);
+    Flight flight = getFlight(reservationDTO);
 
     Reservation reservation = new Reservation();
+
     reservation.setUser(appUser);
     reservation.setFlight(flight);
 
     reservationRepository.save(reservation);
   }
+
 
   public void deleteReservation(UUID reservationId) {
     Reservation reservation = reservationRepository.findById(reservationId)
@@ -74,12 +67,8 @@ public class ReservationService {
     Reservation reservation = reservationRepository.findById(reservationId)
         .orElseThrow(ReservationNotFoundException::new);
 
-    AppUser appUser = appUserRepository.findById(UUID.fromString(reservationDTO.getUserId()))
-        .orElseThrow(
-            AppUserNotFoundException::new);
-
-    Flight flight = flightRepository.findById(UUID.fromString(reservationDTO.getFlightId()))
-        .orElseThrow(FlightNotFoundException::new);
+    AppUser appUser = getAppUser(reservationDTO);
+    Flight flight = getFlight(reservationDTO);
 
     reservation.setUser(appUser);
     reservation.setFlight(flight);
@@ -100,11 +89,11 @@ public class ReservationService {
     return reservations;
   }
 
-  public List<Reservation> getReservationsByUserId(UUID userId) {
+  public List<Reservation> getReservationsByUserId(UUID appUserId) {
 
-    AppUser user = appUserRepository.findById(userId).orElseThrow(AppUserNotFoundException::new);
+    AppUser user = appUserRepository.findById(appUserId).orElseThrow(AppUserNotFoundException::new);
 
-    List<Reservation> reservations = reservationRepository.findReservationsByAppUserId(userId);
+    List<Reservation> reservations = reservationRepository.findReservationsByAppUserId(appUserId);
 
     if (reservations.isEmpty()) {
       throw new ReservationNotFoundException();
@@ -112,5 +101,37 @@ public class ReservationService {
 
     return reservations;
 
+  }
+
+  public List<Reservation> getReservationsByUserIdAndFlightId(UUID appUserId, UUID flightId) {
+    AppUser appUser = appUserRepository.findById(appUserId)
+        .orElseThrow(AppUserNotFoundException::new);
+    Flight flight = flightRepository.findById(flightId).orElseThrow(FlightNotFoundException::new);
+    List<Reservation> reservationsByUserIdAndFlightId = reservationRepository.findReservationsByAppUserIdAndFlightId(
+        appUserId, flightId);
+    if (reservationsByUserIdAndFlightId.isEmpty()) {
+      throw new ReservationNotFoundException();
+    }
+    return reservationsByUserIdAndFlightId;
+  }
+  private Flight getFlight(ReservationDTO reservationDTO) {
+    Optional<Flight> optionalFlight = flightRepository.findById(
+        UUID.fromString(reservationDTO.getFlightId()));
+    if (optionalFlight.isEmpty()) {
+      throw new FlightNotFoundException();
+    }
+
+    Flight flight = optionalFlight.get();
+    return flight;
+  }
+
+  private AppUser getAppUser(ReservationDTO reservationDTO) {
+    Optional<AppUser> optionalAppUser = appUserRepository.findById(
+        UUID.fromString(reservationDTO.getAppUserId()));
+    if (optionalAppUser.isEmpty()) {
+      throw new AppUserNotFoundException();
+    }
+    AppUser appUser = optionalAppUser.get();
+    return appUser;
   }
 }

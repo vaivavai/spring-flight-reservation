@@ -1,5 +1,9 @@
 package com.example.FlightReservations.models;
 
+import com.example.FlightReservations.exceptions.invalidDTO.appUser.AppUserNameMissingException;
+import com.example.FlightReservations.exceptions.invalidDTO.appUser.AppUserRoleMissingException;
+import com.example.FlightReservations.exceptions.invalidDTO.appUser.EmailMissingException;
+import com.example.FlightReservations.exceptions.invalidDTO.appUser.PasswordMissingException;
 import com.example.FlightReservations.utils.AppUserRole;
 import java.util.UUID;
 import javax.persistence.Column;
@@ -25,6 +29,9 @@ public class AppUser {
   private String email;
   private AppUserRole appUserRole;
 
+  public AppUser() {
+  }
+
   public AppUser(String name, String password, String email, AppUserRole appUserRole) {
     this.name = name;
     this.password = password;
@@ -40,7 +47,20 @@ public class AppUser {
     this.appUserRole = appUserRole;
   }
 
-  public AppUser() {
+  public void validateRequirements() {
+    if (this.name == null || this.name.equals("")) {
+      throw new AppUserNameMissingException();
+    }
+    if (this.password == null || this.password.equals("")) {
+      throw new PasswordMissingException();
+    }
+    if (this.email == null || this.email.equals("")) {
+      throw new EmailMissingException();
+    }
+    if (this.appUserRole == null) {
+      throw new AppUserRoleMissingException();
+    }
+
   }
 
   public UUID getId() {
@@ -83,15 +103,6 @@ public class AppUser {
     this.appUserRole = appUserRole;
   }
 
-  @Override
-  public String toString() {
-    return "AppUser{" +
-        "id=" + id +
-        ", name='" + name + '\'' +
-        ", password='" + password + '\'' +
-        ", email='" + email + '\'' +
-        ", appUserRole=" + appUserRole +
-        '}';
-  }
+
 }
 

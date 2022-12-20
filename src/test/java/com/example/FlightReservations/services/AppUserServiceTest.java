@@ -6,6 +6,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+
 import com.example.FlightReservations.exceptions.alreadyExists.AppUserAlreadyExistsException;
 import com.example.FlightReservations.exceptions.notFound.AppUserNotFoundException;
 import com.example.FlightReservations.models.AppUser;
@@ -14,7 +15,6 @@ import com.example.FlightReservations.utils.AppUserRole;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -44,11 +44,10 @@ class AppUserServiceTest {
   @Test
   void should_Get_User_By_Id_If_Exists() {
     //given
-    AppUser user1 = new AppUser("Tom", "tom123", "tom123@gmail.com", AppUserRole.USER);
-
-    UUID uuid = user1.getId();
+    UUID uuid = UUID.randomUUID();
+    AppUser user1 = new AppUser(uuid, "Tom", "tom123", "tom123@gmail.com", AppUserRole.USER);
+    appUserRepository.save(user1);
     given(appUserRepository.findById(uuid)).willReturn(Optional.of(user1));
-    //when
     //then
     underTest.getAppUsersById(uuid);
     verify(appUserRepository).findById(uuid);
@@ -65,9 +64,10 @@ class AppUserServiceTest {
   }
 
   @Test
-  void addNewAppUser() {
+  void should_Add_New_AppUser() {
     //given
-    AppUser user1 = new AppUser("Tom", "tom123", "tom123@gmail.com", AppUserRole.USER);
+    AppUser user1 = new AppUser(UUID.randomUUID(), "Tom", "tom123", "tom123@gmail.com",
+        AppUserRole.USER);
     //when
     underTest.addNewAppUser(user1);
     ArgumentCaptor<AppUser> appUserArgumentCaptor = ArgumentCaptor.forClass(AppUser.class);
@@ -83,11 +83,10 @@ class AppUserServiceTest {
   }
 
   @Test
-  void should_Throw_Exception_When_EmailIsTaken() {
+  void should_Throw_Exception_When_Email_IsTaken() {
     //given
     String email = "tom123@gmail.com";
-    AppUser user1 = new AppUser("Tom", "tom123", email, AppUserRole.USER);
-
+    AppUser user1 = new AppUser(UUID.randomUUID(), "Tom", "tom123", email, AppUserRole.USER);
     given(appUserRepository.findAppUserByEmail(email)).willReturn(Optional.of(user1));
 
     assertThatThrownBy(() -> underTest.addNewAppUser(user1)).isInstanceOf(
@@ -122,8 +121,28 @@ class AppUserServiceTest {
   }
 
   @Test
-  @Disabled
-  void updateAppUser() {
+  void should_Update_AppUser() {
+    AppUser user1 = new AppUser(UUID.randomUUID(), "Tom", "tom123", "tom@gmail.com",
+        AppUserRole.USER);
+    UUID id = user1.getId();
+    given(appUserRepository.findById(id)).willReturn(Optional.of(user1));
+    user1.setName("Tommy");
+    underTest.updateAppUser(id, user1);
+    ArgumentCaptor<AppUser> appUserArgumentCaptorArgumentCaptor = ArgumentCaptor.forClass(
+        AppUser.class);
+    verify(appUserRepository).save(appUserArgumentCaptorArgumentCaptor.capture());
 
+    AppUser appUserArgumentCaptorValue = appUserArgumentCaptorArgumentCaptor.getValue();
+
+    assertThat(appUserArgumentCaptorValue).isEqualTo(user1);
+  }
+
+  @Test
+  void update_User_Should_Throw_() {
+    AppUser user1 = new AppUser("Tom", "tom123", "tom@gmail.com", AppUserRole.USER);
+    given(appUserRepository.findById(any())).willReturn(Optional.empty());
+    assertThatThrownBy(() -> underTest.updateAppUser(any(), user1)).isInstanceOf(
+        AppUserNotFoundException.class);
+    verify(appUserRepository, never()).save(any());
   }
 }

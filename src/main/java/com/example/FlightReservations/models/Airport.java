@@ -1,5 +1,8 @@
 package com.example.FlightReservations.models;
 
+import com.example.FlightReservations.exceptions.invalidDTO.airport.AirportNameMissingException;
+import com.example.FlightReservations.exceptions.invalidDTO.airport.CityMissingException;
+import com.example.FlightReservations.exceptions.invalidDTO.airport.CountryMissingException;
 import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,10 +12,9 @@ import javax.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
-
 @Entity(name = "airport")
 @Table
-public class Airport { // TODO add lombok and remove getters/setters and empty/all args constructors
+public class Airport {
 
   @Id
   @Column(name = "id")
@@ -24,7 +26,8 @@ public class Airport { // TODO add lombok and remove getters/setters and empty/a
   private String country;
   private String city;
 
-  public Airport() {}
+  public Airport() {
+  }
 
   public Airport(String name, String city, String country) {
     this.name = name;
@@ -37,6 +40,20 @@ public class Airport { // TODO add lombok and remove getters/setters and empty/a
     this.name = name;
     this.country = country;
     this.city = city;
+  }
+
+  public void validateRequirements() {
+    if (this.name == null || this.name.equals("")) {
+      throw new AirportNameMissingException();
+    }
+
+    if (this.country == null || this.country.equals("")) {
+      throw new CountryMissingException();
+    }
+    if (this.city == null || this.city.equals("")) {
+      throw new CityMissingException();
+    }
+
   }
 
   public UUID getId() {
@@ -71,13 +88,4 @@ public class Airport { // TODO add lombok and remove getters/setters and empty/a
     this.city = city;
   }
 
-  @Override
-  public String toString() {
-    return "Airport{" +
-        "id=" + id +
-        ", name='" + name + '\'' +
-        ", country='" + country + '\'' +
-        ", city='" + city + '\'' +
-        '}';
-  }
 }

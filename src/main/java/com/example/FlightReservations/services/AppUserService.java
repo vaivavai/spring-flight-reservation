@@ -29,19 +29,15 @@ public class AppUserService {
     if (appUser.isEmpty()) {
       throw new AppUserNotFoundException();
     }
-
     return appUser.get();
   }
 
   public void addNewAppUser(AppUser appUser) {
-//    appUserRepository.findAppUserByEmail(appUser.getEmail());
     Optional<AppUser> optionalAppUser = appUserRepository.findAppUserByEmail(appUser.getEmail());
     if (optionalAppUser.isPresent()) {
       throw new AppUserAlreadyExistsException();
     }
-
     appUserRepository.save(appUser);
-
   }
 
   public void deleteAppUser(UUID appUserId) {
@@ -65,5 +61,6 @@ public class AppUserService {
       throw new AppUserNotFoundException();
     }
   }
+
 }
 

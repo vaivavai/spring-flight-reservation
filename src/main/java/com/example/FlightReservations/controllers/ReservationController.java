@@ -27,40 +27,51 @@ public class ReservationController {
     this.reservationService = reservationService;
   }
 
+  // Get all or by flightId or UserId
   @GetMapping
-  public List<Reservation> getReservations() {
+  public List<Reservation> getReservations(
+      @RequestParam(name = "flightId", required = false) UUID flightId,
+      @RequestParam(name = "appUserId", required = false) UUID appUserId) {
+
+    if (flightId == null && appUserId != null) {
+      return reservationService.getReservationsByUserId(appUserId);
+    }
+    if (flightId != null && appUserId == null) {
+      return reservationService.getReservationsByFlightId(flightId);
+    }
+    if (flightId != null && appUserId != null) {
+      return reservationService.getReservationsByUserIdAndFlightId(appUserId, flightId);
+    }
+
     return reservationService.getReservations();
   }
 
+  // Get by reservationId
   @GetMapping(path = "{reservationId}")
   public Reservation getReservationsById(@PathVariable UUID reservationId) {
     Reservation reservationsById = reservationService.getReservationsById(reservationId);
     return reservationsById;
   }
-@GetMapping(path = "flight/{flightId}") //TODO pakeist pagal parametra
-  public List<Reservation> getReservationsByFlightId(@PathVariable UUID flightId) {
-    return reservationService.getReservationsByFlightId(flightId);
-  }
 
-  @GetMapping(path = "/user") //TODO decide ar path ar requestparam
-  public List<Reservation> getReservationsByUserId(@RequestParam(name = "userId") UUID userId) {
-    return reservationService.getReservationsByUserId(userId);
-  }
-
+  // Create reservation
   @PostMapping
   public void addNewReservation(@RequestBody ReservationDTO reservationDTO) {
+    reservationDTO.validateRequirements();
     reservationService.addReservation(reservationDTO);
   }
 
-  @DeleteMapping(path= "{reservationId}")
-  public  void deleteReservation(@PathVariable UUID reservationId) {
+  // Delete reservation
+  @DeleteMapping(path = "{reservationId}")
+  public void deleteReservation(@PathVariable UUID reservationId) {
     reservationService.deleteReservation(reservationId);
   }
-  @PutMapping(path= "{reservationId}")
-  public  void updateReservation(@PathVariable UUID reservationId, @RequestBody ReservationDTO reservationDTO) {
+
+  // Update reservation
+  @PutMapping(path = "{reservationId}")
+  public void updateReservation(@PathVariable UUID reservationId,
+      @RequestBody ReservationDTO reservationDTO) {
+    reservationDTO.validateRequirements();
     reservationService.updateReservation(reservationId, reservationDTO);
   }
-
-
 
 }
