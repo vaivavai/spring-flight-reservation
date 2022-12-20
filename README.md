@@ -9,18 +9,25 @@ This is an Spring Boot application that is used as REST API to create flights, f
 ### Dependencies
 
 * PostgreSQL
-* Maven
+* Maven 3.0+
 * Java 17
 
-### Installing
+### Configuring database locally
+* Create a postgres database named **_postgres_**. Default port is **_5432_** on localhost
+* Open src/main/resources/application.properties file and change the spring datasource username and password as per your PostgreSQL installation.
+* Prefill data in tables by running initial_data.sql script in src/main/resources using your preferred DB client.
 
-* WIP
+### Installing
+* To prepare maven dependancies
+```
+mvn clean install
+```
 
 ### Executing program
 
-* WIP
+* To run the application
 ```
-code blocks for commands
+mvn spring-boot:run
 ```
 
 ## Authors
@@ -162,7 +169,7 @@ Test them using postman or any other rest client.
 
 ## Version History
 
-* 2.0
+* 1.1
     * Adding Airport class instead of just city name as origin/destination
 * 1.0
     * Initial Release
