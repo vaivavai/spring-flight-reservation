@@ -4,8 +4,8 @@ delete from app_user;
 delete from airport;
 
 insert into airport (id, city, country, name) values
-  ('3ba74066-2171-4458-a917-f5eca679c6b5', 'Vilnius', 'Lithunia', 'VNO'),
-  ('492045d1-2683-4d0a-a60b-0ae1332ce3e8', 'Kaunas', 'Lithunia', 'KNO'),
+  ('3ba74066-2171-4458-a917-f5eca679c6b5', 'Vilnius', 'Lithuania', 'VNO'),
+  ('492045d1-2683-4d0a-a60b-0ae1332ce3e8', 'Kaunas', 'Lithuania', 'KNO'),
   ('5c9c9e83-8667-4d6e-9f6b-8f3db7210686', 'Riga', 'Latvia', 'RIX'),
   ('7d5326cc-edc6-456a-ad59-c9fe39f248c7', 'London', 'United Kingdom', 'LCY');
 
