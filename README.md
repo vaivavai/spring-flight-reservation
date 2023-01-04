@@ -2,7 +2,7 @@
 
 ## Description
 
-This is an Spring Boot application that is used as REST API to create flights, flight reservations using airports, users, flight models.
+This is a Spring Boot application that is used as REST API to create flights, flight reservations using airports, users, flight models.
 
 ## Getting Started
 
