@@ -18,7 +18,7 @@ This is a Spring Boot application that is used as REST API to create flights, fl
 * Prefill data in tables by running initial_data.sql script in src/main/resources using your preferred DB client.
 
 ### Installing
-* To prepare maven dependancies
+* To prepare maven dependencies
 ```
 mvn clean install
 ```
