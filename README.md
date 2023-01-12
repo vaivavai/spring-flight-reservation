@@ -69,7 +69,7 @@ The app defines following CRUD APIs.
 | GET           | api/v1/reservations                  | Get all flight reservations                                                                |                            |                         |
 | _Request param_ | flightId                             | Can filter by flight ID                                                                    |                            |                         |
 | _Request param_ | userId                               | Can filter by user ID                                                                      |                            |                         |
-| _Request param_ | flightId & userId                    | Can filter by both flight and user IDs                                                     |                            | |
+| _Request param_ | flightId & userId                    | Can filter by both flight and user IDs                                                     |                            |[JSON](#getreservationuserflightid) |
 | GET           | api/v1/reservations/{reservationId}  | Get reservation by ID                                                                      |                            |   [JSON](#getreservation)                       |
 | POST          | api/v1/reservations                  | Add new reservation  (if reservation with the same flight and user does not already exist) | [JSON](#reservationcreate) |                         |
 | PUT           | api/v1/reservations/{reservationId}  | Update reservation                                                                         | [JSON](#reservationupdate) |                         |
@@ -199,6 +199,38 @@ Test them using postman or any other rest client.
   },
   "departureDate": "2023-03-15T10:30:00",
   "price": 250.5
+}
+```
+
+
+##### <a id="getreservationuserflightid">Get Reservation by User ID and Flight ID -> api/v1/reservations?appuserId=3a3bfe33-a08c-4f35-affe-ccb45de1123a&flightId=0274f4e5-6a01-4bc7-9839-0fe939368323</a>
+```json
+{
+  "id": "222bfe33-a08c-4f35-affe-ccb45de1123a",
+  "flight":{
+    "id": "0274f4e5-6a01-4bc7-9839-0fe939368323",
+    "originAirport":{
+      "id": "7d5326cc-edc6-456a-ad59-c9fe39f248c7",
+      "name": "LCY",
+      "country": "United Kingdom",
+      "city": "London"
+    },
+    "destinationAirport":{
+      "id": "3ba74066-2171-4458-a917-f5eca679c6b5",
+      "name": "VNO",
+      "country": "Lithunia",
+      "city": "Vilnius"
+    },
+    "departureDate": "2023-03-15T10:30:00",
+    "price": 952.99
+  },
+  "user":{
+    "id": "7a1bfe69-a08c-4f35-affe-ccb45de1123a",
+    "name": "Ann",
+    "password": "ann34645",
+    "email": "ann@gmail.com",
+    "appUserRole": "USER"
+  }
 }
 ```
 

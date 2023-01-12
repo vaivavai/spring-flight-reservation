@@ -14,7 +14,7 @@ import org.hibernate.annotations.Type;
 
 @Entity
 @Table(name = "reservation", uniqueConstraints = {
-    @UniqueConstraint(name = "UniqueUserAndFlight", columnNames = {"app_user_id", "flight_id"}) //todo check why not validated
+    @UniqueConstraint(name = "UniqueUserAndFlight", columnNames = {"app_user_id", "flight_id"})
 })
 public class Reservation {
 
